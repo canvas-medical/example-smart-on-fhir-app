@@ -16,6 +16,7 @@
         </style>
     </head>
     <body>
+        <p id="logged-in-user"></p>
         <h4>Current Patient</h4>
         <div id="patient">Loading...</div>
         <br/>
@@ -23,6 +24,15 @@
         <div id="meds">Loading...</div>
         <script type="text/javascript">
             FHIR.oauth2.ready().then(function(client) {
+                // Show information about the token user
+                client.user.read().then(
+                    function(user) {
+                      var logged_in_user = "Logged in as: ";
+                      logged_in_user += user.name[0].text;
+                      logged_in_user += " (" + client.user.fhirUser + ")";
+                      document.getElementById("logged-in-user").innerText = logged_in_user;
+                    }
+                );
                 
                 // Render the current patient (or any error)
                 client.patient.read().then(
